@@ -1,3 +1,5 @@
+import os
+
 class Claim:
     def __init__(self, user_id, image_paths, user_claim, claim_object, previous_claims_context=None):
         self.user_id = user_id
@@ -15,6 +17,32 @@ class Claim:
         self.supporting_image_ids = None       
         self.valid_image = None  
         self.severity = None
+
+    def verify_image_paths(self):
+        """Verifies that all images in image_paths exist on disk."""
+        # Handle both string (from CSV) and list inputs
+        paths = self.image_paths.split(';') if isinstance(self.image_paths, str) else self.image_paths
+        
+        all_exist = True
+        if not paths or (len(paths) == 1 and paths[0] == ''):
+            all_exist = False
+        else:
+            for path in paths:
+                if not os.path.exists(path):
+                    all_exist = False
+                    break
+        
+        if not all_exist:
+            self.evidence_standard_met = False
+            self.evidence_standard_met_reason = "Images not provided so unable to verifiy damage"
+            self.risk_flags = None
+            self.issue_type = "unknown"
+            self.object_part = "unknown"
+            self.claim_status = "not_enough_information"
+            self.claim_status_justification = "No image provided so unable to verifiy damage"
+            self.supporting_image_ids = None
+            self.valid_image = False
+            self.severity = "unknown"
 
     def __repr__(self):
         return f"<Claim user_id={self.user_id} object={self.claim_object}>"
