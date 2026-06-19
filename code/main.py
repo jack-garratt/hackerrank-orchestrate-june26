@@ -30,13 +30,13 @@ def process_all_claims(csv_path="dataset/sample_claims.csv"):
             # Create a Claim instance
             claim = Claim(
                 user_id=row['user_id'],
-                image_paths=row['image_paths'],
+                image_paths=row['image_paths'].split(";"),
                 user_claim=row['user_claim'],
                 claim_object=row['claim_object'],
                 previous_claims_context=user_history
             )
             claims.append(claim)
-            print(f"Created: {claim} with history: {claim.previous_claims_context}")
+            print(f"Created: {claim}")
             
     return claims
 
