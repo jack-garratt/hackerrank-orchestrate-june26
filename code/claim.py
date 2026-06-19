@@ -17,29 +17,32 @@ class Claim:
         self.supporting_image_ids = None       
         self.valid_image = None  
         self.severity = None
+        self.verify_image_paths()
 
     def verify_image_paths(self):
         """Verifies that all images in image_paths exist on disk."""
-        # Handle both string (from CSV) and list inputs
-        paths = self.image_paths.split(';') if isinstance(self.image_paths, str) else self.image_paths
+        paths = self.image_paths
         
         all_exist = True
         if not paths or (len(paths) == 1 and paths[0] == ''):
             all_exist = False
+            print(f"User: {self.user_id} failed in check 1")
         else:
             for path in paths:
-                if not os.path.exists(path):
+                if not os.path.exists(f"dataset/{path}"):
                     all_exist = False
+                    print(f"User: {self.user_id} failed in check 2 with path {path}")
                     break
+
         
         if not all_exist:
             self.evidence_standard_met = False
-            self.evidence_standard_met_reason = "Images not provided so unable to verifiy damage"
-            self.risk_flags = None
+            self.evidence_standard_met_reason = "No image provided so unable to verifiy damage."
+            self.risk_flags = []
             self.issue_type = "unknown"
             self.object_part = "unknown"
             self.claim_status = "not_enough_information"
-            self.claim_status_justification = "No image provided so unable to verifiy damage"
+            self.claim_status_justification = "No image provided so unable to verifiy damage."
             self.supporting_image_ids = None
             self.valid_image = False
             self.severity = "unknown"

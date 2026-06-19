@@ -13,7 +13,11 @@ def load_evidence_requirements(csv_path="dataset/evidence_requirements.csv"):
             for row in reader:
                 obj = row['claim_object']
                 if obj in requirements:
-                    requirements[obj].append(row['minimum_image_evidence'])
+                    requirements[obj].append(f"RequirementID: {row['requirement_id']} AppliesTo: {row['applies_to']} Evidence Required: {row['minimum_image_evidence']}")
+                if obj == "all":
+                    requirements["car"].append(f"RequirementID: {row['requirement_id']} AppliesTo: {row['applies_to']} Evidence Required: {row['minimum_image_evidence']}")
+                    requirements["laptop"].append(f"RequirementID: {row['requirement_id']} AppliesTo: {row['applies_to']} Evidence Required: {row['minimum_image_evidence']}")
+                    requirements["package"].append(f"RequirementID: {row['requirement_id']} AppliesTo: {row['applies_to']} Evidence Required: {row['minimum_image_evidence']}")
     return requirements
 
 def process_all_claims():
@@ -36,3 +40,4 @@ if __name__ == "__main__":
     print(f"Loaded {len(car_reqs)} requirements for Car.")
     print(f"Loaded {len(laptop_reqs)} requirements for Laptop.")
     print(f"Loaded {len(package_reqs)} requirements for Package.")
+    print(car_reqs)
