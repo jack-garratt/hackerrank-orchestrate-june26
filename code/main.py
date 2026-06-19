@@ -17,20 +17,11 @@ def process_first_claim(csv_path="dataset/sample_claims.csv"):
             image_paths = row['image_paths'].split(';')
             user_claim = row['user_claim']
             claim_object = row['claim_object']
-            evidence_standard_met = row['evidence_standard_met']
-            evidence_standard_met_reason = row['evidence_standard_met_reason']
-            risk_flags = row['risk_flags']
-            issue_type = row['issue_type']
-            object_part = row['object_part']
-            claim_status = row['claim_status']
-            claim_status_justification = row['claim_status_justification']
-            supporting_image_ids = row['supporting_image_ids']
-            valid_image = row['valid_image']
-            severity = row['severity']
             
             print(f"User ID: {user_id}")
             print(f"Image Paths: {image_paths}")
             print(f"Claim: {user_claim}")
+            print(f"Claim Object: {claim_object}")
             # You can access other variables here as needed
         else:
             print("No records found in CSV.")
