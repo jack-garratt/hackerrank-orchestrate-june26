@@ -1,44 +1,38 @@
-import csv
 import os
+import csv
 from claim import Claim
-from user_history import UserHistory
 
-def load_user_history(history_path="dataset/user_history.csv"):
-    history_map = {}
-    with open(history_path, mode='r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            history_map[row['user_id']] = UserHistory(**row)
-    return history_map
-
-def process_all_claims(csv_path="dataset/sample_claims.csv"):
-    if not os.path.exists(csv_path):
-        print(f"File not found: {csv_path}")
-        return []
-
-    # Load history first
-    history_map = load_user_history()
+def load_evidence_requirements(csv_path="dataset/evidence_requirements.csv"):
+    """Loads evidence requirements from CSV, grouping by claim_object."""
+    # Initialize dictionary with empty lists for each type
+    requirements = {"car": [], "laptop": [], "package": []}
     
-    claims = []
-    with open(csv_path, mode='r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        
-        for row in reader:
-            # Get history for this user
-            user_history = history_map.get(row['user_id'])
-            
-            # Create a Claim instance
-            claim = Claim(
-                user_id=row['user_id'],
-                image_paths=row['image_paths'].split(";"),
-                user_claim=row['user_claim'],
-                claim_object=row['claim_object'],
-                previous_claims_context=user_history
-            )
-            claims.append(claim)
-            print(f"Created: {claim}")
-            
-    return claims
+    if os.path.exists(csv_path):
+        with open(csv_path, mode='r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                obj = row['claim_object']
+                if obj in requirements:
+                    requirements[obj].append(row['minimum_image_evidence'])
+    return requirements
+
+def process_all_claims():
+    """Placeholder for processing logic."""
+    return []
 
 if __name__ == "__main__":
-    process_all_claims()
+    # Load requirements
+    reqs = load_evidence_requirements()
+    
+    # Split into 3 variables
+    car_reqs = reqs['car']
+    laptop_reqs = reqs['laptop']
+    package_reqs = reqs['package']
+    
+    # Process claims
+    claims = process_all_claims()
+    
+    # Now you have the requirements ready for the AI agent integration
+    print(f"Loaded {len(car_reqs)} requirements for Car.")
+    print(f"Loaded {len(laptop_reqs)} requirements for Laptop.")
+    print(f"Loaded {len(package_reqs)} requirements for Package.")
