@@ -12,13 +12,15 @@ def process_all_claims(csv_path="dataset/sample_claims.csv"):
         
         for row in reader:
             user_id = row['user_id']
-            # Split image_paths by semicolon into a list
             image_paths = row['image_paths'].split(';')
             user_claim = row['user_claim']
+            claim_object = row["claim_object"]
+
             
             print(f"--- Processing User: {user_id} ---")
             print(f"Image Paths: {image_paths}")
             print(f"Claim: {user_claim}")
+            print(f"Claim Object: {claim_object}") 
             # You can add further processing logic here
 
 if __name__ == "__main__":
